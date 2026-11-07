@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1f4e5a">
+  <title>Amuebl-AR</title>
+  <link rel="icon" type="image/svg+xml" href="imagenes/logo.svg">
+  <link rel="stylesheet" href="css/estilos.css">
+  <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+</head>
+<body>
+  <header class="cabecera">
+    <div class="cabecera-contenido">
+      <img id="logo" class="logo" alt="Logo del taller">
+      <div>
+        <h1 id="titulo">Amuebl-AR</h1>
+        <p class="subtitulo">Diseña tu mueble a medida y míralo en tu espacio</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="contenedor" id="app">
+    <section class="tarjeta tarjeta-visor">
+      <model-viewer id="visor" ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed"
+        camera-controls shadow-intensity="1" alt="Mueble a medida"></model-viewer>
+      <p class="pista">Gira el modelo con el dedo. Toca el ícono de realidad aumentada para verlo en tu espacio.</p>
+    </section>
+
+    <section class="tarjeta">
+      <h2><span>1</span>Mueble</h2>
+      <div class="chips" id="mueble"></div>
+    </section>
+
+    <section class="tarjeta">
+      <h2><span>2</span>Medidas y opciones</h2>
+      <div class="fila-3">
+        <div><label for="ancho">Ancho (cm)</label><input id="ancho" type="number" inputmode="numeric"></div>
+        <div><label for="alto">Alto (cm)</label><input id="alto" type="number" inputmode="numeric"></div>
+        <div><label for="fondo">Fondo (cm)</label><input id="fondo" type="number" inputmode="numeric"></div>
+      </div>
+      <div class="fila-2">
+        <div id="grupo-repisas"><label for="repisas">Repisas</label><select id="repisas"></select></div>
+        <div id="grupo-puertas">
+          <label for="puertas">Puertas</label>
+          <select id="puertas"><option value="0">Sin puertas</option><option value="1">Con puertas</option></select>
+        </div>
+      </div>
+      <p id="error"></p>
+    </section>
+
+    <section class="tarjeta">
+      <h2><span>3</span>Acabado</h2>
+      <div class="acabados" id="acabados"></div>
+    </section>
+
+    <section class="tarjeta resumen">
+      <div class="precio-fila"><span>Precio estimado</span><b id="precio-valor"></b></div>
+      <small>Aproximado y sujeto a confirmación del taller. El color en pantalla puede variar del real.</small>
+      <button id="enviar"><img id="icono-whatsapp" class="icono" alt="">Enviar cotización por WhatsApp</button>
+    </section>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/muebles.js"></script>
+  <script src="js/glb.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
