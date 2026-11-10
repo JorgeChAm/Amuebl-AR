@@ -1,4 +1,13 @@
-// Cada pieza es un tablero [x0, y0, z0, x1, y1, z1] en metros.
+// Cada pieza es un tablero [x0, y0, z0, x1, y1, z1] en metros; si lleva 'metal' al final es herraje.
+function manija(x, centroY, z) {
+  const ancho = 0.012, mitad = 0.08, saliente = 0.02, base = 0.012, poste = 0.015;
+  return [
+    [x, centroY - mitad, z + base, x + ancho, centroY + mitad, z + saliente, 'metal'],
+    [x, centroY - mitad, z, x + ancho, centroY - mitad + poste, z + base, 'metal'],
+    [x, centroY + mitad - poste, z, x + ancho, centroY + mitad, z + base, 'metal']
+  ];
+}
+
 function cuerpo(ancho, alto, fondo, repisas, puertas, conFondo) {
   const x = ancho / 2;
   const z = fondo / 2;
@@ -16,7 +25,12 @@ function cuerpo(ancho, alto, fondo, repisas, puertas, conFondo) {
     piezas.push([-x + GROSOR, y, -z + atras, x - GROSOR, y + GROSOR, frente - 0.01]);
   }
   if (puertas) {
-    piezas.push([-x, 0.01, frente, -0.002, alto - 0.01, z], [0.002, 0.01, frente, x, alto - 0.01, z]);
+    const centroY = Math.min(alto / 2, 1);
+    const separacion = 0.03;
+    piezas.push(
+      [-x, 0.01, frente, -0.002, alto - 0.01, z], [0.002, 0.01, frente, x, alto - 0.01, z],
+      ...manija(-separacion - 0.012, centroY, z), ...manija(separacion, centroY, z)
+    );
   }
   return piezas;
 }
@@ -54,7 +68,7 @@ const GEOMETRIA = {
 };
 
 function areaTablero(piezas) {
-  const volumen = piezas.reduce((suma, q) => suma + (q[3] - q[0]) * (q[4] - q[1]) * (q[5] - q[2]), 0);
+  const volumen = piezas.filter(q => q[6] !== 'metal').reduce((suma, q) => suma + (q[3] - q[0]) * (q[4] - q[1]) * (q[5] - q[2]), 0);
   return volumen / GROSOR;
 }
 

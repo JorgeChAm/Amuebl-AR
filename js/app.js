@@ -3,6 +3,7 @@ const params = new URLSearchParams(location.search);
 const estado = { mueble: 'mesa', acabado: 'pino', url: null, mensaje: '', temporizador: null };
 const texturas = {};
 const CAMPOS = ['ancho', 'alto', 'fondo'];
+const CLAVE_GUIA = 'amueblar-guia-vista';
 
 function enlaceVencido() {
   const vence = params.get('v');
@@ -59,6 +60,10 @@ function cambiarMueble(clave) {
   estado.mueble = clave;
   marcarActivo('mueble', 'mueble', clave);
   const config = MUEBLES[estado.mueble];
+  const pared = config.colocacion === 'pared';
+  $('visor').setAttribute('ar-placement', pared ? 'wall' : 'floor');
+  $('superficie').textContent = pared ? 'la pared' : 'el piso';
+  $('nota').textContent = config.nota || '';
   CAMPOS.forEach((id, i) => { $(id).value = config.medidas[i]; });
   $('grupo-repisas').style.display = config.repisas ? '' : 'none';
   $('grupo-puertas').style.display = config.puertas ? '' : 'none';
@@ -94,6 +99,34 @@ function precargarTexturas() {
   });
 }
 
+function guiaVista() {
+  try { return localStorage.getItem(CLAVE_GUIA) === '1'; } catch (error) { return false; }
+}
+
+function cerrarGuia() {
+  $('guia').hidden = true;
+  try { localStorage.setItem(CLAVE_GUIA, '1'); } catch (error) { /* sin almacenamiento disponible */ }
+}
+
+function enRealidadAumentada() {
+  return ['session-started', 'object-placed'].includes($('visor').getAttribute('ar-status'));
+}
+
+function alternarAyuda() {
+  if (enRealidadAumentada()) $('ayuda-ar').hidden = !$('ayuda-ar').hidden;
+  else $('guia').hidden = false;
+}
+
+function configurarAyuda() {
+  $('ayuda').addEventListener('click', alternarAyuda);
+  $('guia-cerrar').addEventListener('click', cerrarGuia);
+  ['ayuda', 'ayuda-ar'].forEach(id => $(id).addEventListener('beforexrselect', evento => evento.preventDefault()));
+  $('visor').addEventListener('ar-status', evento => {
+    if (evento.detail.status === 'not-presenting') $('ayuda-ar').hidden = true;
+  });
+  if (!guiaVista()) $('guia').hidden = false;
+}
+
 function iniciar() {
   configurarImagenes();
   const taller = params.get('taller');
@@ -125,6 +158,7 @@ function iniciar() {
     window.open(`https://wa.me/${numero}?text=${encodeURIComponent(estado.mensaje)}`, '_blank');
   });
 
+  configurarAyuda();
   precargarTexturas();
   marcarActivo('acabados', 'acabado', estado.acabado);
   cambiarMueble(estado.mueble);

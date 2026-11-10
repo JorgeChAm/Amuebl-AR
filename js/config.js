@@ -24,5 +24,8 @@ const MUEBLES = {
     nombre: 'Closet', medidas: [120, 200, 55], limites: [[60, 300], [150, 260], [40, 70]],
     repisas: [1, 4, 2], puertas: true
   },
-  repisa: { nombre: 'Repisa', medidas: [100, 90, 25], limites: [[30, 250], [30, 250], [15, 50]], repisas: [2, 6, 3] }
+  repisa: {
+    nombre: 'Repisa', medidas: [100, 90, 25], limites: [[30, 250], [30, 250], [15, 50]], repisas: [2, 6, 3],
+    colocacion: 'pared', nota: 'La repisa se coloca en la pared. La altura de montaje la confirma el taller.'
+  }
 };

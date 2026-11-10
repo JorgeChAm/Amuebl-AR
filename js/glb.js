@@ -7,10 +7,11 @@ function colorLineal(hex) {
 }
 
 function generarMalla(piezas) {
-  const posiciones = [], normales = [], uv = [], indices = [];
+  const posiciones = [], normales = [], uv = [], madera = [], metal = [];
   for (const q of piezas) {
     const dim = [q[3] - q[0], q[4] - q[1], q[5] - q[2]];
     const veta = dim.indexOf(Math.max(...dim));
+    const indices = q[6] === 'metal' ? metal : madera;
     CARAS.forEach((cara, i) => {
       const inicio = posiciones.length / 3;
       const ejes = [0, 1, 2].filter(a => a !== EJE_NORMAL[i]);
@@ -25,11 +26,12 @@ function generarMalla(piezas) {
       indices.push(inicio, inicio + 1, inicio + 2, inicio, inicio + 2, inicio + 3);
     });
   }
-  return { posiciones, normales, uv, indices };
+  return { posiciones, normales, uv, madera, metal };
 }
 
 function crearGLB(piezas, color, imagen) {
-  const { posiciones, normales, uv, indices } = generarMalla(piezas);
+  const { posiciones, normales, uv, madera, metal } = generarMalla(piezas);
+  const indices = [...madera, ...metal];
   const eje = a => posiciones.filter((_, i) => i % 3 === a);
   const min = [0, 1, 2].map(a => Math.min(...eje(a)));
   const max = [0, 1, 2].map(a => Math.max(...eje(a)));
@@ -53,7 +55,7 @@ function crearGLB(piezas, color, imagen) {
     meshes: [{ primitives: [{ attributes: { POSITION: 1, NORMAL: 2, TEXCOORD_0: 3 }, indices: 0, material: 0 }] }],
     materials: [{ pbrMetallicRoughness: material }],
     accessors: [
-      { bufferView: 0, componentType: 5123, count: indices.length, type: 'SCALAR' },
+      { bufferView: 0, componentType: 5123, count: madera.length, type: 'SCALAR' },
       { bufferView: 1, componentType: 5126, count: posiciones.length / 3, type: 'VEC3', min, max },
       { bufferView: 2, componentType: 5126, count: normales.length / 3, type: 'VEC3' },
       { bufferView: 3, componentType: 5126, count: uv.length / 2, type: 'VEC2' }
@@ -66,6 +68,12 @@ function crearGLB(piezas, color, imagen) {
     ],
     buffers: [{ byteLength: total }]
   };
+  if (metal.length) {
+    const atributos = gltf.meshes[0].primitives[0].attributes;
+    gltf.accessors.push({ bufferView: 0, byteOffset: madera.length * 2, componentType: 5123, count: metal.length, type: 'SCALAR' });
+    gltf.meshes[0].primitives.push({ attributes: atributos, indices: 4, material: 1 });
+    gltf.materials.push({ pbrMetallicRoughness: { baseColorFactor: [0.78, 0.79, 0.8, 1], metallicFactor: 0.9, roughnessFactor: 0.3 } });
+  }
   if (imagen) {
     gltf.bufferViews.push({ buffer: 0, byteOffset: offUV + bytesUV, byteLength: bytesImagen });
     gltf.textures = [{ sampler: 0, source: 0 }];
