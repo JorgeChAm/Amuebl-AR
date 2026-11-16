@@ -10,6 +10,69 @@
   <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="ico-mueble" viewBox="0 0 96 72">
+      <rect class="ic-t" x="28" y="8" width="40" height="44" rx="3"/>
+      <path class="ic-t" d="M28 23h40M28 38h40"/>
+      <path class="ic-a" d="M28 62h40M28 58v8M68 58v8"/>
+      <path class="ic-a" d="M80 8v44M76 8h8M76 52h8"/>
+    </symbol>
+    <symbol id="ico-boton" viewBox="0 0 96 72">
+      <rect class="ic-t" x="32" y="4" width="32" height="64" rx="6"/>
+      <rect class="ic-t" x="40" y="14" width="16" height="22" rx="2"/>
+      <rect class="ic-m" x="38" y="46" width="20" height="9" rx="4.5"/>
+      <circle class="ic-a ic-pulso" cx="48" cy="50.5" r="10"/>
+    </symbol>
+    <symbol id="ico-mover" viewBox="0 0 96 72">
+      <path class="ic-t" d="M8 64L26 46H70L88 64Z"/>
+      <path class="ic-t" d="M41 46L35 64M55 46L61 64M17 55H79"/>
+      <g class="ic-vaiven">
+        <rect class="ic-t" x="38" y="6" width="20" height="34" rx="4"/>
+        <path class="ic-t" d="M45 12h6"/>
+      </g>
+      <path class="ic-a" d="M10 22h14M10 22l5-5M10 22l5 5"/>
+      <path class="ic-a" d="M86 22H72M86 22l-5-5M86 22l-5 5"/>
+    </symbol>
+    <symbol id="ico-colocar" viewBox="0 0 96 72">
+      <path class="ic-t" d="M8 64L26 46H70L88 64Z"/>
+      <rect class="ic-t" x="38" y="16" width="20" height="30" rx="2"/>
+      <path class="ic-t" d="M38 31h20"/>
+      <ellipse class="ic-a" cx="48" cy="54" rx="8" ry="2.5"/>
+      <ellipse class="ic-a ic-pulso" cx="48" cy="54" rx="16" ry="5"/>
+    </symbol>
+    <symbol id="ico-enviar" viewBox="0 0 96 72">
+      <path class="ic-t" d="M22 10H74a4 4 0 0 1 4 4V42a4 4 0 0 1-4 4H46L32 58V46H22a4 4 0 0 1-4-4V14a4 4 0 0 1 4-4Z"/>
+      <path class="ic-a" d="M36 28l8 8 16-16"/>
+    </symbol>
+    <symbol id="ico-luz" viewBox="0 0 48 48">
+      <circle class="ic-t" cx="24" cy="24" r="7"/>
+      <path class="ic-a" d="M24 6v6M24 36v6M6 24h6M36 24h6M11 11l4 4M33 33l4 4M37 11l-4 4M15 33l-4 4"/>
+    </symbol>
+    <symbol id="ico-textura" viewBox="0 0 48 48">
+      <rect class="ic-t" x="8" y="8" width="32" height="32" rx="3"/>
+      <path class="ic-a" d="M8 24h32M24 8v32"/>
+    </symbol>
+    <symbol id="ico-despacio" viewBox="0 0 48 48">
+      <path class="ic-a" d="M8 24h32M8 24l7-7M8 24l7 7M40 24l-7-7M40 24l-7 7"/>
+    </symbol>
+    <symbol id="ico-arrastrar" viewBox="0 0 96 72">
+      <path class="ic-t" d="M8 64L26 46H70L88 64Z"/>
+      <rect class="ic-t" x="38" y="26" width="20" height="22" rx="2"/>
+      <path class="ic-t" d="M38 37h20"/>
+      <path class="ic-a" d="M12 56H84M12 56l7-5M12 56l7 5M84 56l-7-5M84 56l-7 5"/>
+      <circle class="ic-a ic-pulso" cx="48" cy="37" r="6"/>
+      <circle class="ic-m" cx="48" cy="37" r="2.5"/>
+    </symbol>
+    <symbol id="ico-girar" viewBox="0 0 96 72">
+      <path class="ic-t" d="M8 64L26 46H70L88 64Z"/>
+      <rect class="ic-t" x="38" y="26" width="20" height="22" rx="2"/>
+      <path class="ic-t" d="M38 37h20"/>
+      <path class="ic-a" d="M18 28a30 18 0 0 1 60 0"/>
+      <path class="ic-a" d="M78 28l-4-6M78 28l4-6"/>
+    </symbol>
+  </defs>
+</svg>
   <header class="cabecera">
     <div class="cabecera-contenido">
       <img id="logo" class="logo" alt="Logo del taller">
@@ -27,18 +90,23 @@
         <button slot="ar-button" id="ver-ar" type="button">Ver en mi espacio</button>
         <button slot="exit-webxr-ar-button" id="salir-ar" type="button">Salir</button>
         <button id="ayuda" type="button" aria-label="Ayuda">?</button>
-        <p id="aviso-ar">Mueve el celular despacio hasta detectar <span id="superficie">el piso</span>. Luego toca la pantalla para colocar el mueble.</p>
+        <p id="medidas-ar"></p>
+        <div id="aviso-ar">
+          <svg class="ico" aria-hidden="true"><use href="#ico-mover"/></svg>
+          <p>Mueve el celular despacio apuntando a <span id="superficie">el piso</span></p>
+        </div>
+        <p id="sin-seguimiento">Perdí la superficie. Apunta con más luz o a una zona con textura.</p>
         <div id="ayuda-ar" hidden>
-          <strong>Cómo se usa</strong>
-          <ol>
-            <li>Mueve el celular despacio hasta que detecte la superficie.</li>
-            <li>Toca la pantalla para colocar el mueble.</li>
-            <li>Arrástralo para moverlo y gíralo con dos dedos.</li>
-            <li>Camina a su alrededor para verlo desde todos los lados.</li>
-          </ol>
+          <div class="ayuda-grid">
+            <div><svg class="ico" aria-hidden="true"><use href="#ico-mover"/></svg><b>Mueve despacio</b></div>
+            <div><svg class="ico" aria-hidden="true"><use href="#ico-colocar"/></svg><b>Toca para colocar</b></div>
+            <div><svg class="ico" aria-hidden="true"><use href="#ico-arrastrar"/></svg><b>Arrastra con 1 dedo</b></div>
+            <div><svg class="ico" aria-hidden="true"><use href="#ico-girar"/></svg><b>Gira con 2 dedos</b></div>
+          </div>
         </div>
       </model-viewer>
       <p class="pista">Gira el modelo con el dedo. Toca "Ver en mi espacio" para verlo en tu casa.</p>
+      <p id="fallo-ar" hidden>No pudimos iniciar la realidad aumentada. Revisa el permiso de cámara y usa Chrome en un Android compatible.</p>
     </section>
 
     <section class="tarjeta">
@@ -79,13 +147,18 @@
   <div class="guia" id="guia" role="dialog" aria-modal="true" aria-labelledby="guia-titulo" hidden>
     <div class="guia-tarjeta">
       <h2 id="guia-titulo">¿Cómo funciona?</h2>
-      <ol>
-        <li><strong>Arma tu mueble.</strong> Elige el tipo, escribe las medidas y escoge el acabado.</li>
-        <li><strong>Toca "Ver en mi espacio".</strong> Permite el acceso a la cámara cuando el celular lo pida.</li>
-        <li><strong>Colócalo.</strong> Mueve el celular despacio hasta que detecte el piso (o la pared, en la repisa) y toca la pantalla.</li>
-        <li><strong>Envíalo al taller.</strong> Si te gusta, toca "Enviar cotización por WhatsApp".</li>
+      <ol class="pasos">
+        <li><svg class="ico" aria-hidden="true"><use href="#ico-mueble"/></svg><p><b>Arma tu mueble</b><span>Tipo, medidas y acabado</span></p></li>
+        <li><svg class="ico" aria-hidden="true"><use href="#ico-boton"/></svg><p><b>Toca "Ver en mi espacio"</b><span>Permite la cámara</span></p></li>
+        <li><svg class="ico" aria-hidden="true"><use href="#ico-mover"/></svg><p><b>Mueve el celular despacio</b><span>Apunta al piso o a la pared</span></p></li>
+        <li><svg class="ico" aria-hidden="true"><use href="#ico-colocar"/></svg><p><b>Toca para colocarlo</b><span>Arrástralo y gíralo</span></p></li>
+        <li><svg class="ico" aria-hidden="true"><use href="#ico-enviar"/></svg><p><b>Envía tu cotización</b><span>Por WhatsApp al taller</span></p></li>
       </ol>
-      <p class="guia-nota">Puedes volver a ver esta ayuda con el botón <b>?</b> del visor.</p>
+      <div class="consejos">
+        <div><svg class="ico-mini" aria-hidden="true"><use href="#ico-luz"/></svg><span>Buena luz</span></div>
+        <div><svg class="ico-mini" aria-hidden="true"><use href="#ico-textura"/></svg><span>Piso con textura</span></div>
+        <div><svg class="ico-mini" aria-hidden="true"><use href="#ico-despacio"/></svg><span>Mueve despacio</span></div>
+      </div>
       <button id="guia-cerrar" type="button">Entendido</button>
     </div>
   </div>

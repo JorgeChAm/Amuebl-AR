@@ -34,6 +34,7 @@ function dibujar() {
   $('error').textContent = valido ? '' : `Medidas permitidas: ancho ${a}, alto ${h}, fondo ${f} cm.`;
   $('enviar').disabled = !valido;
   if (!valido) return;
+  $('medidas-ar').textContent = `${medidas.join(' × ')} cm`;
 
   const repisas = config.repisas ? Number($('repisas').value) : 0;
   const puertas = config.puertas ? Number($('puertas').value) : 0;
@@ -122,7 +123,9 @@ function configurarAyuda() {
   $('guia-cerrar').addEventListener('click', cerrarGuia);
   ['ayuda', 'ayuda-ar'].forEach(id => $(id).addEventListener('beforexrselect', evento => evento.preventDefault()));
   $('visor').addEventListener('ar-status', evento => {
-    if (evento.detail.status === 'not-presenting') $('ayuda-ar').hidden = true;
+    const situacion = evento.detail.status;
+    if (situacion === 'not-presenting') $('ayuda-ar').hidden = true;
+    $('fallo-ar').hidden = situacion !== 'failed';
   });
   if (!guiaVista()) $('guia').hidden = false;
 }
